@@ -1,8 +1,11 @@
 import { Pagination } from 'react-bootstrap';
 
-//key -> campo a ordenar (es un string)
-//orderBy -> objeto con el campo actual para ordenar y el orden (orderBy{campo,order})
-//listItems -> lista de items a ordenar (el contenido de la tabla, es un array de objetos)
+//-!-  Fun-cbs-doc : tableOrderBy  [Besmit-28022022]
+//---  d: Recibe una lista de objetos y una key y ordena la lista por esa key
+//---  p:key : campo a ordenar (es un string)
+//---  p:orderBy : objeto con el campo actual para ordenar y el orden (orderBy{campo,order})
+//---  p:listItems : lista de items a ordenar (el contenido de la tabla, es un array de objetos)
+//---  r:Lista de objetos ya ordenados
 function tableOrderBy(key, orderBy, listItems) {
     if (orderBy.campo != key) {
         orderBy.order = 'asc';
@@ -32,12 +35,16 @@ function tableOrderBy(key, orderBy, listItems) {
     return listReturn;
 }
 
-//pag -> número de pagina a la que se cambiará (es un número entero)
-//listItems -> lista de items a paginar (el contenido de la tabla, es un array de objetos)
-//filters -> lista de campos que se deben filtrar (es un array)     ['firstname', 'username', 'admin']
-//searchListItems -> texto a buscar en la lista, se puede filtrar la lista por un texto (es un string)
-//itemsPerPage -> número de items por página (es un número entero)
-//onPaginar -> función que se ejecutará al cambiar de página (es una función)
+//-!-  Fun-cbs-doc : generatePagination  [Besmit-28022022]
+//---  d: Genera la paginación de la lista recibida
+//---  p:pag : número de pagina a la que se cambiará (es un número entero)
+//---  p:listItems : lista de items a paginar (el contenido de la tabla, es un array de objetos)
+//---  p:filters : lista de campos que se deben filtrar (es un array)     ['firstname', 'username', 'admin']
+//---  p:searchListItems : texto a buscar en la lista, se puede filtrar la lista por un texto (es un string)
+//---  p:itemsPerPage : número de items por página (es un número entero)
+//---  p:onPaginar : función que se ejecutará al cambiar de página (es una función)
+//---  r:Listado de la paginación
+
 function generatePagination(pag, listItems, filters, searchListItems, itemsPerPage = 10, onPaginar) {
     let items = []
     var list = listItems.filter(function (itemForFilter) {

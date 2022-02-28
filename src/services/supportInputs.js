@@ -2,7 +2,7 @@
     //---  d:Procesa la ruta para el cambio de los inputs, se aplica para los inputs controlables (es una función de uso general)
     //---  p:val : Valor del input
     //---  p:objDatToChange : Objeto donde se guardará el valor
-    //---  p:positionsPath : ruta a donde debe guardar el valor dentro de objDatToChange
+    //---  p:positionsPath : ruta a donde debe guardar el valor dentro de objDatToChange, ejemplo: 'elem.elem.elem.elem' o permite elementos de array [0] (unidimencional) 'elem.elem[1].elem.elem[3]'
     //---  r:Objeto modificado donde se guardaro el valor
     function processPathForInputChange(val, objDatToChange, positionsPath) {
         let obDat = objDatToChange;

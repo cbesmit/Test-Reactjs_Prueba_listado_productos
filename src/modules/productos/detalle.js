@@ -1,12 +1,13 @@
 import './productos.css';
 import React, { useState, useEffect } from 'react';
 
-import { Form, FloatingLabel, Row, Button, Spinner, Col, Toast, Badge } from 'react-bootstrap';
+import { Form, Row, Button, Spinner, Col, Toast, Badge } from 'react-bootstrap';
 import fetchServer from '../../services/calls/fetchServer';
 import { processPathForInputChange, valueForInput } from '../../services/supportInputs';
-import { isSetNoEmpty, isNoSetOrEmpty } from '../../services/general';
+import { isSetNoEmpty } from '../../services/general';
 
 function DetalleProducto(props) {
+    //-!-  Comm-cbs-doc : Para mostrar la vista de carga y el error en llamadas fetch  [Besmit-28022022]
     const [loading, setLoading] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMsg, setToastMsg] = useState({
@@ -14,20 +15,30 @@ function DetalleProducto(props) {
         body: '',
         variant: 'success'
     });
-
+    //-!-  Comm-cbs-doc : Contendrá toda la información del producto una vez se obtenga de la api  [Besmit-28022022]
     const [dataForm, setDataForm] = useState({});
-
+    //-!-  Fun-cbs-doc : onChangeData  [Besmit-28022022]
+    //---  d:Sirve para el manejo de los cambios en los inputs, se aplica para los inputs controlables (es una función de uso general)
+    //---  p:val : Valor del input
+    //---  p:path : ruta a donde debe guardar el valor dentro de dataForm, ejemplo: 'elem.elem.elem.elem' o permite elementos de array [0] (unidimencional) 'elem.elem[1].elem.elem[3]'    
     function onChangeData(val, path = '') {
         let objDatToChange = (path === '') ? val : processPathForInputChange(val, JSON.parse(JSON.stringify(dataForm)), path.split('.'));
         setDataForm(objDatToChange);
     };
 
+    //-!-  Fun-cbs-doc : getData  [Besmit-28022022]
+    //---  d:Sirve para obtener la información del producto de la api
     async function getData() {
+        //-!-  Comm-cbs-doc : Se activa la vista de 'Cargando'  [Besmit-28022022]
         setLoading(true);
+        //-!-  Comm-cbs-doc : Se hace la llamada Fetch para obtener el listado de productos  [Besmit-28022022]
         await fetchServer.call('products/' + props.productID, 'GET').then(data => {
+            //-!-  Comm-cbs-doc : Se verifica que no halla dado error fetch, en caso de hacerlo arroja una excepción  [Besmit-28022022]
             if (!data.ok) throw new Error(fetchServer.getTextError(data, 'Error al obtener el dato'));
+            //-!-  Comm-cbs-doc : Se establece la información del usuario con lo obtenido de fetch  [Besmit-28022022]
             setDataForm(data.data);
         }).catch(error => {
+            //-!-  Comm-cbs-doc : Se activa la vista de 'Error'  [Besmit-28022022]
             let msgError = (error.message && error.message != '') ? error.message : (error.constructor === Object && Object.keys(error).length !== 0) ? JSON.stringify(error) : error;
             let datError = {
                 title: "Error",
@@ -37,9 +48,11 @@ function DetalleProducto(props) {
             setToastMsg(datError);
             setShowToast(true);
         });
+        //-!-  Comm-cbs-doc : Se desactiva la vista de 'Cargando'  [Besmit-28022022]
         setLoading(false);
     }
 
+    //-!-  Comm-cbs-doc : Se ejecuta una sola vez, verifica que exista productID y en caso positivo obtiene la inormación del producto  [Besmit-28022022]
     useEffect(async () => {
         if (isSetNoEmpty(props.productID)) await getData();
     }, []);
