@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import fetchServer from '../../services/calls/fetchServer';
 import { tableOrderBy, generatePagination } from '../../services/orderAndPagination';
-import { isSetNoEmpty, isNoSetOrEmpty } from '../../services/general';
+
+import DetalleProducto from './detalle';
 
 import { Row, Card, Badge, Col, Form, DropdownButton } from 'react-bootstrap';
 import { Navbar, Container, Dropdown, Modal, Spinner, Pagination, Toast } from 'react-bootstrap';
@@ -32,9 +33,13 @@ function ListadoProductos(props) {
 
     const [listItems, setListItems] = useState([]);
     const [itemID, setItemID] = useState('');
+    const [nameProduct, setNameProduct] = useState('');
+
     const [searchListItems, setSearchListItems] = useState('');
 
     function onEditar(id) {
+        let oFound = listItems.find(item => item.id === id);
+        setNameProduct(oFound.title);
         setItemID(id);
         setShowDetail(true);
     }
@@ -192,12 +197,13 @@ function ListadoProductos(props) {
                 onHide={handleCloseNew}
                 backdrop="static"
                 keyboard={false}
+                size="lg"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Detalle de producto</Modal.Title>
+                    <Modal.Title>{nameProduct}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
+                    <DetalleProducto productID={itemID} />
                 </Modal.Body>
             </Modal>
 
